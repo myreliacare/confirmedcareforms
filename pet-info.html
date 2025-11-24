@@ -1,0 +1,1581 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <title>In-Home Pet Visit Information | MyReliaCare</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant:wght@300;400;500;600&family=Cormorant+Unicase:wght@600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Cormorant', serif;
+            background: #1A1614;
+            color: #F5E8EB;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            line-height: 1.6;
+            padding-bottom: 80px;
+        }
+
+        .container {
+            max-width: 900px;
+            width: 100%;
+            background: linear-gradient(135deg, #2A2220 0%, #1F1A18 100%);
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            border: 2px solid rgba(200, 162, 169, 0.2);
+            overflow: hidden;
+            margin: 40px 0;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #2F2825 0%, #2A2220 100%);
+            padding: 30px 30px 15px 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-family: 'Cormorant Unicase', serif;
+            color: #C8A2A9;
+            font-size: 2.2em;
+            margin-bottom: 8px;
+            font-weight: 700;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .header p {
+            color: #D4C5C9;
+            font-size: 1.1em;
+            font-style: italic;
+        }
+
+        /* Progress Indicator */
+        .progress-container {
+            padding: 30px 40px;
+            background: rgba(200, 162, 169, 0.05);
+            border-bottom: 1px solid rgba(200, 162, 169, 0.15);
+        }
+
+        .progress-steps {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            margin-bottom: 0;
+        }
+
+        .progress-line {
+            position: absolute;
+            top: 16px;
+            left: 8%;
+            right: 8%;
+            height: 2px;
+            background: rgba(200, 162, 169, 0.2);
+            z-index: 1;
+        }
+
+        .progress-line-fill {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            background: linear-gradient(90deg, #B59197 0%, #C8A2A9 100%);
+            transition: width 0.4s ease;
+            z-index: 2;
+        }
+
+        .step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            z-index: 3;
+            flex: 1;
+        }
+
+        .step-circle {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            background: #2A2220;
+            border: 2px solid rgba(200, 162, 169, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Cormorant', serif;
+            font-weight: 600;
+            font-size: 0.95em;
+            color: #D4C5C9;
+            transition: all 0.3s ease;
+        }
+
+        .step.active .step-circle {
+            background: linear-gradient(135deg, #B59197 0%, #C8A2A9 100%);
+            border-color: #C8A2A9;
+            color: white;
+            transform: scale(1.05);
+            box-shadow: 0 0 15px rgba(200, 162, 169, 0.4);
+        }
+
+        .step.completed .step-circle {
+            background: #B59197;
+            border-color: #B59197;
+            color: white;
+        }
+
+        .step-label {
+            margin-top: 8px;
+            font-size: 0.8em;
+            color: #D4C5C9;
+            text-align: center;
+            font-family: 'Cormorant', serif;
+            max-width: 90px;
+        }
+
+        .step.active .step-label {
+            color: #C8A2A9;
+            font-weight: 600;
+        }
+
+        .form-content {
+            padding: 40px;
+            min-height: 500px;
+            padding-bottom: 60px;
+        }
+
+        .form-step {
+            display: none;
+        }
+
+        .form-step.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .form-section h2 {
+            font-family: 'Cormorant Unicase', serif;
+            color: #C8A2A9;
+            font-size: 1.8em;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid rgba(200, 162, 169, 0.2);
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            color: #C8A2A9;
+            margin-bottom: 8px;
+            font-size: 16px;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .required {
+            color: #E57373;
+            margin-left: 4px;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="tel"],
+        input[type="date"],
+        input[type="number"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid rgba(200, 162, 169, 0.2);
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            font-family: 'Cormorant', serif;
+            color: #F5E8EB;
+            background: rgba(42, 34, 32, 0.6);
+            -webkit-appearance: none;
+            appearance: none;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="tel"],
+        textarea {
+            caret-color: #C8A2A9;
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #C8A2A9;
+            box-shadow: 0 0 0 3px rgba(200, 162, 169, 0.15);
+            background: rgba(42, 34, 32, 0.8);
+        }
+
+        input::placeholder,
+        textarea::placeholder {
+            color: rgba(245, 232, 235, 0.4);
+        }
+
+        select {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23C8A2A9' d='M6 9L2 5h8z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 16px center;
+            padding-right: 40px;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 20px;
+        }
+
+        .radio-grid,
+        .checkbox-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 15px;
+            margin-top: 10px;
+        }
+
+        .radio-box,
+        .checkbox-box {
+            position: relative;
+        }
+
+        .radio-box input[type="radio"],
+        .checkbox-box input[type="checkbox"] {
+            display: none;
+        }
+
+        .radio-box-label,
+        .checkbox-box-label {
+            display: block;
+            padding: 16px 14px;
+            border: 2px solid rgba(200, 162, 169, 0.2);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            font-weight: 500;
+            background: rgba(42, 34, 32, 0.5);
+            color: #D4C5C9;
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
+            min-height: 48px;
+        }
+
+        .radio-box-label:hover,
+        .checkbox-box-label:hover {
+            border-color: rgba(200, 162, 169, 0.5);
+            background: rgba(200, 162, 169, 0.1);
+            color: #F5E8EB;
+        }
+
+        .radio-box-label:active,
+        .checkbox-box-label:active {
+            background: rgba(200, 162, 169, 0.15);
+        }
+
+        .radio-box input[type="radio"]:checked + .radio-box-label,
+        .checkbox-box input[type="checkbox"]:checked + .checkbox-box-label {
+            border-color: #C8A2A9;
+            background: rgba(200, 162, 169, 0.2);
+            font-weight: 600;
+            color: #F5E8EB;
+            box-shadow: 0 0 10px rgba(200, 162, 169, 0.2);
+        }
+
+        .help-text {
+            font-size: 0.9em;
+            color: #D4C5C9;
+            margin-top: 6px;
+            font-style: italic;
+        }
+
+        .form-navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 40px;
+            gap: 15px;
+        }
+
+        .nav-button {
+            padding: 16px 32px;
+            border: 2px solid #C8A2A9;
+            background: rgba(42, 34, 32, 0.6);
+            color: #C8A2A9;
+            border-radius: 8px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Cormorant Unicase', serif;
+            letter-spacing: 0.5px;
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
+        }
+
+        .nav-button:hover {
+            background: rgba(200, 162, 169, 0.1);
+            transform: translateY(-1px);
+        }
+
+        .nav-button.next-button {
+            background: linear-gradient(135deg, #C8A2A9 0%, #B59197 100%);
+            color: white;
+            border: none;
+            flex: 1;
+        }
+
+        .nav-button.next-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(200, 162, 169, 0.4);
+        }
+
+        .nav-button.next-button:active {
+            transform: translateY(0);
+        }
+
+        .nav-button.prev-button {
+            flex: 0 0 auto;
+        }
+
+        /* Pet Cards */
+        .pet-cards-container {
+            margin-bottom: 20px;
+        }
+
+        .pet-card {
+            background: rgba(200, 162, 169, 0.08);
+            border: 2px solid rgba(200, 162, 169, 0.2);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 15px;
+            position: relative;
+        }
+
+        .pet-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(200, 162, 169, 0.2);
+        }
+
+        .pet-card-title {
+            font-family: 'Cormorant Unicase', serif;
+            color: #C8A2A9;
+            font-size: 1.2em;
+            font-weight: 600;
+        }
+
+        .remove-pet-btn {
+            background: rgba(229, 115, 115, 0.2);
+            border: 1px solid rgba(229, 115, 115, 0.4);
+            color: #E57373;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-family: 'Cormorant', serif;
+            font-size: 0.9em;
+            transition: all 0.3s ease;
+        }
+
+        .remove-pet-btn:hover {
+            background: rgba(229, 115, 115, 0.3);
+        }
+
+        .add-pet-btn {
+            display: block;
+            width: 100%;
+            padding: 16px;
+            border: 2px dashed rgba(200, 162, 169, 0.4);
+            background: transparent;
+            color: #C8A2A9;
+            border-radius: 8px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Cormorant Unicase', serif;
+            margin-top: 20px;
+        }
+
+        .add-pet-btn:hover {
+            border-color: #C8A2A9;
+            background: rgba(200, 162, 169, 0.1);
+        }
+
+        /* Info Box */
+        .info-box {
+            background: rgba(200, 162, 169, 0.1);
+            border: 1px solid rgba(200, 162, 169, 0.3);
+            border-radius: 8px;
+            padding: 15px 20px;
+            margin-bottom: 25px;
+        }
+
+        .info-box p {
+            color: #D4C5C9;
+            font-size: 0.95em;
+            line-height: 1.6;
+        }
+
+        .info-box.warning {
+            background: rgba(229, 115, 115, 0.1);
+            border-color: rgba(229, 115, 115, 0.3);
+        }
+
+        .info-box.warning p {
+            color: #F5E8EB;
+        }
+
+        /* Checkbox Agreement */
+        .agreement-box {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            background: rgba(200, 162, 169, 0.08);
+            padding: 20px;
+            border-radius: 8px;
+            border: 2px solid rgba(200, 162, 169, 0.2);
+            margin-bottom: 25px;
+        }
+
+        .agreement-box input[type="checkbox"] {
+            width: 22px;
+            height: 22px;
+            margin-top: 3px;
+            accent-color: #C8A2A9;
+            flex-shrink: 0;
+        }
+
+        .agreement-box label {
+            color: #F5E8EB;
+            font-weight: 400;
+            margin-bottom: 0;
+            cursor: pointer;
+        }
+
+        .agreement-box a {
+            color: #C8A2A9;
+            text-decoration: underline;
+        }
+
+        /* Confirmation Section */
+        .confirmation-section {
+            display: none;
+            padding: 60px 40px 80px 40px;
+            text-align: center;
+            min-height: 500px;
+        }
+
+        .confirmation-section.active {
+            display: block;
+        }
+
+        .checkmark {
+            width: 90px;
+            height: 90px;
+            margin: 0 auto 30px auto;
+            background: rgba(200, 162, 169, 0.15);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .checkmark svg {
+            width: 45px;
+            height: 45px;
+            stroke: #C8A2A9;
+        }
+
+        .confirmation-section h2 {
+            font-family: 'Cormorant Unicase', serif;
+            color: #C8A2A9;
+            font-size: 2.5em;
+            margin-bottom: 20px;
+        }
+
+        .confirmation-section p {
+            font-size: 1.15em;
+            color: #D4C5C9;
+            line-height: 1.8;
+            margin-bottom: 15px;
+        }
+
+        /* Summary Section */
+        .summary-section {
+            text-align: left;
+            background: rgba(200, 162, 169, 0.05);
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 30px;
+        }
+
+        .summary-section h3 {
+            font-family: 'Cormorant Unicase', serif;
+            color: #C8A2A9;
+            font-size: 1.3em;
+            margin-bottom: 15px;
+        }
+
+        .summary-item {
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(200, 162, 169, 0.15);
+        }
+
+        .summary-item:last-child {
+            border-bottom: none;
+        }
+
+        .summary-label {
+            font-weight: 600;
+            color: #F5E8EB;
+        }
+
+        .summary-value {
+            color: #D4C5C9;
+        }
+
+        /* Collapsible Sections in Pet Form */
+        .collapsible-section {
+            margin-top: 15px;
+        }
+
+        .collapsible-header {
+            font-weight: 600;
+            color: #C8A2A9;
+            font-size: 1.05em;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid rgba(200, 162, 169, 0.15);
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+                padding-bottom: 60px;
+            }
+
+            .container {
+                margin: 20px 0;
+            }
+
+            .progress-container {
+                padding: 15px 10px 20px 10px;
+            }
+
+            .progress-steps {
+                overflow-x: auto;
+                justify-content: space-between;
+                gap: 8px;
+                padding-bottom: 5px;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            .progress-line {
+                display: none;
+            }
+
+            .step {
+                flex: 0 0 auto;
+                min-width: 50px;
+            }
+
+            .step-label {
+                font-size: 0.65em;
+                max-width: 50px;
+                line-height: 1.2;
+            }
+
+            .step-circle {
+                width: 28px;
+                height: 28px;
+                font-size: 0.8em;
+            }
+
+            .step.active .step-circle {
+                transform: scale(1.05);
+            }
+
+            .grid-2, .grid-3 {
+                grid-template-columns: 1fr;
+            }
+
+            .form-content {
+                padding: 20px;
+            }
+
+            .header {
+                padding: 25px 20px 15px 20px;
+            }
+
+            .header h1 {
+                font-size: 1.6em;
+            }
+
+            .form-section h2 {
+                font-size: 1.5em;
+            }
+
+            .form-navigation {
+                flex-direction: column-reverse;
+                gap: 12px;
+            }
+
+            .nav-button {
+                width: 100%;
+                padding: 18px 24px;
+                font-size: 1.05em;
+            }
+
+            .form-group {
+                margin-bottom: 25px;
+            }
+
+            select {
+                font-size: 16px;
+                padding: 16px;
+            }
+
+            textarea {
+                font-size: 16px;
+                min-height: 120px;
+            }
+        }
+
+        /* Custom scrollbar for dark theme */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(42, 34, 32, 0.3);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(200, 162, 169, 0.3);
+            border-radius: 5px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(200, 162, 169, 0.5);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>In-Home Pet Visit Information</h1>
+            <p>Standard visits: 30 minutes to 2 hours</p>
+        </div>
+
+        <!-- Progress Indicator -->
+        <div class="progress-container">
+            <div class="progress-steps">
+                <div class="progress-line">
+                    <div class="progress-line-fill" id="progressFill" style="width: 0%"></div>
+                </div>
+                <div class="step active" data-step="1">
+                    <div class="step-circle">1</div>
+                    <div class="step-label">You</div>
+                </div>
+                <div class="step" data-step="2">
+                    <div class="step-circle">2</div>
+                    <div class="step-label">Pets</div>
+                </div>
+                <div class="step" data-step="3">
+                    <div class="step-circle">3</div>
+                    <div class="step-label">Location</div>
+                </div>
+                <div class="step" data-step="4">
+                    <div class="step-circle">4</div>
+                    <div class="step-label">Access</div>
+                </div>
+                <div class="step" data-step="5">
+                    <div class="step-circle">5</div>
+                    <div class="step-label">Review</div>
+                </div>
+            </div>
+        </div>
+
+        <form id="petVisitForm" class="form-content" action="https://formspree.io/f/mwpjedoq" method="POST">
+            <!-- Hidden fields -->
+            <input type="hidden" name="_subject" value="New In-Home Pet Visit Information Form">
+            <input type="hidden" name="_next" value="#">
+            <input type="hidden" name="petData" id="petDataHidden">
+            
+            <!-- Step 1: Client Information -->
+            <div class="form-step active" data-step="1">
+                <div class="form-section">
+                    <h2>Your Information</h2>
+                    
+                    <div class="info-box">
+                        <p>Please complete this entire form to the best of your ability. Thank you!</p>
+                    </div>
+
+                    <div class="grid-2">
+                        <div class="form-group">
+                            <label for="fullName">Full Name<span class="required">*</span></label>
+                            <input type="text" id="fullName" name="fullName" required placeholder="As it appears on your booking">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="phone">Phone Number<span class="required">*</span></label>
+                            <input type="tel" id="phone" name="phone" required placeholder="(555) 555-5555">
+                        </div>
+                    </div>
+
+                    <h3 class="collapsible-header" style="margin-top: 30px;">Emergency Contact</h3>
+                    <p class="help-text" style="margin-bottom: 20px;">Someone we can reach if we can't get ahold of you during a visit</p>
+
+                    <div class="grid-2">
+                        <div class="form-group">
+                            <label for="emergencyName">Emergency Contact Name<span class="required">*</span></label>
+                            <input type="text" id="emergencyName" name="emergencyName" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="emergencyPhone">Emergency Contact Phone<span class="required">*</span></label>
+                            <input type="tel" id="emergencyPhone" name="emergencyPhone" required placeholder="(555) 555-5555">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="emergencyRelationship">Relationship to You<span class="required">*</span></label>
+                        <select id="emergencyRelationship" name="emergencyRelationship" required>
+                            <option value="">Select relationship...</option>
+                            <option value="spouse">Spouse/Partner</option>
+                            <option value="parent">Parent</option>
+                            <option value="sibling">Sibling</option>
+                            <option value="friend">Friend</option>
+                            <option value="neighbor">Neighbor</option>
+                            <option value="coworker">Coworker</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-navigation">
+                    <button type="button" class="nav-button next-button" onclick="nextStep()">Next Step</button>
+                </div>
+            </div>
+
+            <!-- Step 2: Pet Information -->
+            <div class="form-step" data-step="2">
+                <div class="form-section">
+                    <h2>Pet Information</h2>
+                    
+                    <div class="info-box">
+                        <p>Add each pet that will be in our care. Click "Add Another Pet" if you have more than one!</p>
+                        <p style="margin-top: 10px;"><strong>Note:</strong> Only required fields must be completed, along with anything else applicable to your situation. However, the more information you provide, the more personalized care we can offer your pets.</p>
+                    </div>
+
+                    <div class="pet-cards-container" id="petCardsContainer">
+                        <!-- Pet cards will be dynamically added here -->
+                    </div>
+
+                    <button type="button" class="add-pet-btn" onclick="addPet()">+ Add Another Pet</button>
+                </div>
+
+                <div class="form-navigation">
+                    <button type="button" class="nav-button prev-button" onclick="prevStep()">Back</button>
+                    <button type="button" class="nav-button next-button" onclick="nextStep()">Next Step</button>
+                </div>
+            </div>
+
+            <!-- Step 3: Location Information -->
+            <div class="form-step" data-step="3">
+                <div class="form-section">
+                    <h2>Location Information</h2>
+
+                    <div class="form-group">
+                        <label for="serviceAddress">Service Address<span class="required">*</span></label>
+                        <input type="text" id="serviceAddress" name="serviceAddress" required placeholder="123 Main St, City, KY 12345">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="apartmentUnit">Apartment/Unit Number</label>
+                        <input type="text" id="apartmentUnit" name="apartmentUnit" placeholder="If applicable">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="gateCode">Gate Code / Community Access</label>
+                        <input type="text" id="gateCode" name="gateCode" placeholder="If your community has a gate">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="parkingInstructions">Parking Instructions</label>
+                        <textarea id="parkingInstructions" name="parkingInstructions" rows="3" placeholder="Where should we park? Driveway, street, visitor parking, etc."></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="locationNotes">Additional Location Notes</label>
+                        <textarea id="locationNotes" name="locationNotes" rows="3" placeholder="Anything else we should know about finding your home? (e.g., 'Blue house on the corner', 'Door is around back')"></textarea>
+                    </div>
+                </div>
+
+                <div class="form-navigation">
+                    <button type="button" class="nav-button prev-button" onclick="prevStep()">Back</button>
+                    <button type="button" class="nav-button next-button" onclick="nextStep()">Next Step</button>
+                </div>
+            </div>
+
+            <!-- Step 4: Home Access -->
+            <div class="form-step" data-step="4">
+                <div class="form-section">
+                    <h2>Home Access</h2>
+
+                    <div class="form-group">
+                        <label>How will we enter your home?<span class="required">*</span></label>
+                        <div class="radio-grid">
+                            <div class="radio-box">
+                                <input type="radio" id="accessCode" name="accessMethod" value="code" required onchange="toggleAccessCode()">
+                                <label for="accessCode" class="radio-box-label">Code</label>
+                            </div>
+                            <div class="radio-box">
+                                <input type="radio" id="accessLockbox" name="accessMethod" value="lockbox" onchange="toggleAccessCode()">
+                                <label for="accessLockbox" class="radio-box-label">Lock Box</label>
+                            </div>
+                            <div class="radio-box">
+                                <input type="radio" id="accessKey" name="accessMethod" value="hidden_key" onchange="toggleAccessCode()">
+                                <label for="accessKey" class="radio-box-label">Hidden Key</label>
+                            </div>
+                            <div class="radio-box">
+                                <input type="radio" id="accessKnock" name="accessMethod" value="knock" onchange="toggleAccessCode()">
+                                <label for="accessKnock" class="radio-box-label">Knock / Someone Home</label>
+                            </div>
+                            <div class="radio-box">
+                                <input type="radio" id="accessOther" name="accessMethod" value="other" onchange="toggleAccessCode()">
+                                <label for="accessOther" class="radio-box-label">Other</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group" id="accessCodeGroup" style="display: none;">
+                        <label for="accessCode" id="accessCodeLabel">Access Code</label>
+                        <input type="text" id="accessCodeInput" name="accessCode" placeholder="e.g., Garage code: 1234 or Door code: 5678">
+                    </div>
+
+                    <div class="form-group" id="accessDetailsGroup" style="display: none;">
+                        <label for="accessDetails" id="accessDetailsLabel">Access Details<span class="required">*</span></label>
+                        <textarea id="accessDetails" name="accessDetails" rows="3" placeholder="Please provide specific instructions"></textarea>
+                    </div>
+
+                    <div class="info-box">
+                        <p><strong>Security Note:</strong> If you prefer not to share your access code here, you can text or call us on the day of service instead. If no code is provided in this form, we'll assume you'll be sending it separately.</p>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="alarmInfo">Alarm System Information</label>
+                        <textarea id="alarmInfo" name="alarmInfo" rows="3" placeholder="Do you have an alarm? If so, please provide the disarm code and any instructions"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="homeNotes">Additional Home Access Notes</label>
+                        <textarea id="homeNotes" name="homeNotes" rows="3" placeholder="Any hazards, general concerns, or other notes not covered elsewhere in this form"></textarea>
+                    </div>
+                </div>
+
+                <div class="form-navigation">
+                    <button type="button" class="nav-button prev-button" onclick="prevStep()">Back</button>
+                    <button type="button" class="nav-button next-button" onclick="nextStep()">Next Step</button>
+                </div>
+            </div>
+
+            <!-- Step 5: Review & Submit -->
+            <div class="form-step" data-step="5">
+                <div class="form-section">
+                    <h2>Review & Submit</h2>
+                    
+                    <div id="reviewSummary">
+                        <!-- Summary will be populated by JavaScript -->
+                    </div>
+
+                    <h3 class="collapsible-header" style="margin-top: 10px;">Acknowledgments</h3>
+
+                    <div class="agreement-box">
+                        <input type="checkbox" id="termsAgree" name="termsAgree" required>
+                        <label for="termsAgree">
+                            I have read and agree to MyReliaCare's <a href="https://myreliacare.com/terms" target="_blank">Terms of Service</a> and <a href="https://myreliacare.com/privacy" target="_blank">Privacy Policy</a>. I confirm that all information provided is accurate to the best of my knowledge.<span class="required">*</span>
+                        </label>
+                    </div>
+
+                    <div class="agreement-box">
+                        <input type="checkbox" id="cancellationAgree" name="cancellationAgree" required>
+                        <label for="cancellationAgree">
+                            I acknowledge MyReliaCare's cancellation policy: We kindly request at least 24 hours notice when possible. Your first 3 late cancellations (under 24 hours) are free, no questions asked. Starting with the 4th late cancellation, a fee of 30% of that day's scheduled services will apply. Repeated late cancellations or no-shows may result in termination of services.<span class="required">*</span>
+                        </label>
+                    </div>
+
+                    <div class="agreement-box">
+                        <input type="checkbox" id="vetAuthAgree" name="vetAuthAgree" required>
+                        <label for="vetAuthAgree">
+                            In the rare event of a medical emergency, I authorize MyReliaCare to seek veterinary care for my pet(s) if I am unreachable. I understand that I am responsible for any veterinary costs incurred. We will always make every effort to contact you and your emergency contact first, and in our time of service, we've thankfully never had to use this authorization.<span class="required">*</span>
+                        </label>
+                    </div>
+
+                    <h3 class="collapsible-header" style="margin-top: 30px;">Optional Preferences</h3>
+
+                    <div class="agreement-box">
+                        <input type="checkbox" id="textUpdates" name="textUpdates">
+                        <label for="textUpdates">
+                            Yes, I'd like to receive after-care summaries with photos via text message following each visit. <em>(Recommended)</em>
+                        </label>
+                    </div>
+
+                    <div class="agreement-box">
+                        <input type="checkbox" id="photoRelease" name="photoRelease">
+                        <label for="photoRelease">
+                            I give MyReliaCare permission to use photos or videos of my pet(s) on social media. No identifying home information will be shared. <em>(Optional, but always appreciated!)</em>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-navigation">
+                    <button type="button" class="nav-button prev-button" onclick="prevStep()">Back</button>
+                    <button type="submit" class="nav-button next-button">Submit Information</button>
+                </div>
+            </div>
+        </form>
+
+        <!-- Confirmation Section -->
+        <div class="confirmation-section" id="confirmationSection">
+            <div class="checkmark">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+            </div>
+            <h2>Information Received!</h2>
+            <p>Thank you for completing your pet visit information form.</p>
+            <p>We now have everything we need to provide the best care for your pets!</p>
+            <p style="margin-top: 30px; color: #C8A2A9;">If you have any questions or need to make changes to your answers,<br>please reach out to us via text or email.</p>
+        </div>
+    </div>
+
+    <script>
+        let currentStep = 1;
+        const totalSteps = 5;
+        let petCount = 0;
+        let petsData = [];
+
+        // Initialize with one pet on load
+        document.addEventListener('DOMContentLoaded', function() {
+            addPet();
+            updateProgress();
+        });
+
+        function addPet() {
+            petCount++;
+            const container = document.getElementById('petCardsContainer');
+            
+            const petCard = document.createElement('div');
+            petCard.className = 'pet-card';
+            petCard.id = `petCard${petCount}`;
+            petCard.dataset.petNumber = petCount;
+            
+            petCard.innerHTML = `
+                <div class="pet-card-header">
+                    <span class="pet-card-title">Pet #${petCount}</span>
+                    ${petCount > 1 ? `<button type="button" class="remove-pet-btn" onclick="removePet(${petCount})">Remove</button>` : ''}
+                </div>
+                
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label>Pet's Name<span class="required">*</span></label>
+                        <input type="text" name="pet${petCount}_name" required placeholder="What do they go by?">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Pet Type<span class="required">*</span></label>
+                        <select name="pet${petCount}_type" required>
+                            <option value="">Select...</option>
+                            <option value="dog">Dog</option>
+                            <option value="cat">Cat</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label>Breed<span class="required">*</span></label>
+                        <input type="text" name="pet${petCount}_breed" required placeholder="e.g., Golden Retriever, Domestic Shorthair">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Approximate Weight<span class="required">*</span></label>
+                        <select name="pet${petCount}_weight" required>
+                            <option value="">Select range...</option>
+                            <option value="0-10">Under 10 lbs</option>
+                            <option value="10-25">10-25 lbs</option>
+                            <option value="25-50">25-50 lbs</option>
+                            <option value="50-75">50-75 lbs</option>
+                            <option value="75-100">75-100 lbs</option>
+                            <option value="100+">Over 100 lbs</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="grid-2">
+                    <div class="form-group">
+                        <label>Age<span class="required">*</span></label>
+                        <input type="text" name="pet${petCount}_age" required placeholder="e.g., 3 years, 6 months">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Spayed/Neutered?<span class="required">*</span></label>
+                        <select name="pet${petCount}_fixed" required>
+                            <option value="">Select...</option>
+                            <option value="yes">Yes</option>
+                            <option value="no">No</option>
+                            <option value="unknown">Unknown</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="collapsible-section">
+                    <div class="collapsible-header">Veterinary Information</div>
+                    
+                    <div class="form-group">
+                        <label>Veterinarian/Clinic Name<span class="required">*</span></label>
+                        <input type="text" name="pet${petCount}_vetName" required placeholder="Name of vet or clinic">
+                    </div>
+                    
+                    <div class="grid-2">
+                        <div class="form-group">
+                            <label>Vet Phone Number<span class="required">*</span></label>
+                            <input type="tel" name="pet${petCount}_vetPhone" required placeholder="(555) 555-5555">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Vet Address</label>
+                            <input type="text" name="pet${petCount}_vetAddress" placeholder="Street address, city">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="collapsible-section">
+                    <div class="collapsible-header">Feeding Information</div>
+                    
+                    <div class="form-group">
+                        <label>Food Type & Brand</label>
+                        <input type="text" name="pet${petCount}_foodType" placeholder="e.g., Blue Buffalo Chicken & Rice, dry kibble">
+                    </div>
+                    
+                    <div class="grid-2">
+                        <div class="form-group">
+                            <label>Feeding Amount</label>
+                            <input type="text" name="pet${petCount}_feedingAmount" placeholder="e.g., 1 cup, 1/2 can">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Feeding Schedule</label>
+                            <input type="text" name="pet${petCount}_feedingSchedule" placeholder="e.g., 7am and 5pm, free feed">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Food Location</label>
+                        <input type="text" name="pet${petCount}_foodLocation" placeholder="Where do you keep their food?">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Treats Allowed?</label>
+                        <select name="pet${petCount}_treats">
+                            <option value="">Select...</option>
+                            <option value="yes_any">Yes - any treats are fine</option>
+                            <option value="yes_provided">Yes - only treats I provide</option>
+                            <option value="no">No treats please</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Special Feeding Instructions</label>
+                        <textarea name="pet${petCount}_feedingNotes" rows="2" placeholder="Any special instructions, dietary restrictions, or food allergies?"></textarea>
+                    </div>
+                </div>
+
+                <div class="collapsible-section">
+                    <div class="collapsible-header">Medical Information</div>
+                    
+                    <div class="form-group">
+                        <label>Any concerning medical history or known allergies?</label>
+                        <textarea name="pet${petCount}_medicalHistory" rows="3" placeholder="e.g., hip dysplasia, diabetes, allergic to chicken, history of seizures, recent surgery, etc."></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Does this pet take any medications?<span class="required">*</span></label>
+                        <select name="pet${petCount}_hasMeds" required onchange="toggleMedFields(${petCount})">
+                            <option value="">Select...</option>
+                            <option value="yes">Yes</option>
+                            <option value="no">No</option>
+                        </select>
+                    </div>
+                    
+                    <div id="medFields${petCount}" style="display: none;">
+                        <div class="form-group">
+                            <label>Will we be administering medication during visits?<span class="required">*</span></label>
+                            <select name="pet${petCount}_administerMeds" onchange="toggleMedAdmin(${petCount})">
+                                <option value="">Select...</option>
+                                <option value="yes">Yes</option>
+                                <option value="no">No, just noting for awareness</option>
+                            </select>
+                        </div>
+                        
+                        <div id="medAdminFields${petCount}" style="display: none;">
+                            <div class="form-group">
+                                <label>What type of medication?<span class="required">*</span></label>
+                                <select name="pet${petCount}_medType">
+                                    <option value="">Select...</option>
+                                    <option value="pill">Pill / Tablet</option>
+                                    <option value="liquid_syringe">Liquid (oral syringe)</option>
+                                    <option value="topical">Topical (applied to skin)</option>
+                                    <option value="eye_drops">Eye Drops</option>
+                                    <option value="ear_drops">Ear Drops</option>
+                                    <option value="other">Other (please describe)</option>
+                                </select>
+                                <p class="help-text">Please note: We are able to administer oral medications (pills, liquids via syringe) and topical treatments. We are not able to administer injections.</p>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>Medication Details</label>
+                                <textarea name="pet${petCount}_medications" rows="3" placeholder="Please list: medication name, dosage, frequency, and administration method (e.g., with food, in pill pocket, etc.)"></textarea>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Medication Location</label>
+                            <input type="text" name="pet${petCount}_medLocation" placeholder="Where do you keep their medications?">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="collapsible-section">
+                    <div class="collapsible-header">Behavior & Temperament</div>
+                    
+                    <div class="form-group">
+                        <label>General Temperament<span class="required">*</span></label>
+                        <select name="pet${petCount}_temperament" required onchange="toggleTemperamentOther(${petCount})">
+                            <option value="">Select...</option>
+                            <option value="friendly">Friendly & Outgoing</option>
+                            <option value="shy">Shy / Takes Time to Warm Up</option>
+                            <option value="anxious">Anxious / Nervous</option>
+                            <option value="independent">Independent / Aloof</option>
+                            <option value="playful">Very Playful / High Energy</option>
+                            <option value="calm">Calm / Laid Back</option>
+                            <option value="other">Other (please describe)</option>
+                        </select>
+                    </div>
+                    
+                    <div id="temperamentOther${petCount}" style="display: none;">
+                        <div class="form-group">
+                            <label>Please describe your pet's temperament</label>
+                            <textarea name="pet${petCount}_temperamentDescription" rows="2" placeholder="Tell us about your pet's personality..."></textarea>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>How does this pet typically react to strangers?<span class="required">*</span></label>
+                        <select name="pet${petCount}_strangerReaction" required>
+                            <option value="">Select...</option>
+                            <option value="excited">Excited & Welcoming</option>
+                            <option value="cautious">Cautious at First, Then Warms Up</option>
+                            <option value="hides">Tends to Hide</option>
+                            <option value="barks_growls">May Bark/Growl Initially</option>
+                            <option value="indifferent">Indifferent / Doesn't Care</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Any fears or triggers we should know about?</label>
+                        <textarea name="pet${petCount}_fears" rows="2" placeholder="e.g., other dogs, men, birds or other small animals, etc."></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Behavior quirks or things to watch for?</label>
+                        <textarea name="pet${petCount}_quirks" rows="2" placeholder="e.g., tries to door dash, counter surfs, resource guards toys"></textarea>
+                    </div>
+                </div>
+
+                <div class="collapsible-section">
+                    <div class="form-group">
+                        <label>Has this pet ever aggressively bitten anyone?<span class="required">*</span></label>
+                        <select name="pet${petCount}_biteHistory" required onchange="toggleBiteDetails(${petCount})">
+                            <option value="">Select...</option>
+                            <option value="no">No, never</option>
+                            <option value="yes">Yes</option>
+                        </select>
+                        <p class="help-text">We ask this for everyone's safety. A "yes" doesn't disqualify your pet from care - it just helps us prepare appropriately.</p>
+                    </div>
+                    
+                    <div id="biteDetails${petCount}" style="display: none;">
+                        <div class="form-group">
+                            <label>Please provide details</label>
+                            <textarea name="pet${petCount}_biteDetails" rows="3" placeholder="What were the circumstances? What should we do to prevent a similar situation?"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="collapsible-section">
+                    <div class="collapsible-header">Exercise & Play</div>
+                    
+                    <div class="form-group">
+                        <label>Exercise Needs/Requests</label>
+                        <textarea name="pet${petCount}_exercise" rows="2" placeholder="e.g., 15 min walk, backyard playtime, prefers indoor play only"></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Favorite Toys or Activities</label>
+                        <input type="text" name="pet${petCount}_favoriteToys" placeholder="e.g., squeaky toys, fetch, laser pointer">
+                    </div>
+                </div>
+
+                <div class="collapsible-section">
+                    <div class="collapsible-header">Yard & Outdoor Time</div>
+                    
+                    <div class="form-group">
+                        <label>Do you have a fenced yard?<span class="required">*</span></label>
+                        <select name="pet${petCount}_fencedYard" required>
+                            <option value="">Select...</option>
+                            <option value="yes">Yes</option>
+                            <option value="no">No</option>
+                            <option value="partial">Partially fenced</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Outdoor leash preference for this pet<span class="required">*</span></label>
+                        <select name="pet${petCount}_leashPreference" required>
+                            <option value="">Select...</option>
+                            <option value="leash_fenced">On leash, even in fenced yard</option>
+                            <option value="offleash_fenced">Off leash in fenced yard</option>
+                            <option value="leash_unfenced">On leash (no fence / unfenced area)</option>
+                            <option value="offleash_unfenced">Off leash without a fence (please explain below)</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Please explain any special yard/outdoor circumstances</label>
+                        <textarea name="pet${petCount}_yardNotes" rows="2" placeholder="e.g., electric fence, highly trained recall, specific areas to avoid, etc."></textarea>
+                    </div>
+                </div>
+
+                <div class="collapsible-section">
+                    <div class="collapsible-header">Rules & Special Instructions</div>
+                    
+                    <div class="form-group">
+                        <label>What rules would you like us to follow with this pet?</label>
+                        <textarea name="pet${petCount}_rules" rows="4" placeholder="e.g., not allowed on furniture, must be crated when we leave, no table scraps, keep away from the cat, restricted from certain rooms, specific routines they follow, etc."></textarea>
+                    </div>
+                </div>
+            `;
+            
+            container.appendChild(petCard);
+            
+            // Update card title when name is entered
+            const nameInput = petCard.querySelector(`input[name="pet${petCount}_name"]`);
+            nameInput.addEventListener('input', function() {
+                const title = petCard.querySelector('.pet-card-title');
+                title.textContent = this.value || `Pet #${petCard.dataset.petNumber}`;
+            });
+        }
+
+        function removePet(petNumber) {
+            const card = document.getElementById(`petCard${petNumber}`);
+            if (card) {
+                card.remove();
+                renumberPets();
+            }
+        }
+
+        function renumberPets() {
+            const cards = document.querySelectorAll('.pet-card');
+            cards.forEach((card, index) => {
+                const num = index + 1;
+                card.dataset.petNumber = num;
+                const title = card.querySelector('.pet-card-title');
+                const nameInput = card.querySelector('input[name^="pet"][name$="_name"]');
+                title.textContent = nameInput.value || `Pet #${num}`;
+            });
+            petCount = cards.length;
+        }
+
+        function toggleMedFields(petNumber) {
+            const select = document.querySelector(`select[name="pet${petNumber}_hasMeds"]`);
+            const fields = document.getElementById(`medFields${petNumber}`);
+            if (select && fields) {
+                fields.style.display = select.value === 'yes' ? 'block' : 'none';
+            }
+        }
+
+        function toggleMedAdmin(petNumber) {
+            const select = document.querySelector(`select[name="pet${petNumber}_administerMeds"]`);
+            const fields = document.getElementById(`medAdminFields${petNumber}`);
+            if (select && fields) {
+                fields.style.display = select.value === 'yes' ? 'block' : 'none';
+            }
+        }
+
+        function toggleTemperamentOther(petNumber) {
+            const select = document.querySelector(`select[name="pet${petNumber}_temperament"]`);
+            const fields = document.getElementById(`temperamentOther${petNumber}`);
+            if (select && fields) {
+                fields.style.display = select.value === 'other' ? 'block' : 'none';
+            }
+        }
+
+        function toggleBiteDetails(petNumber) {
+            const select = document.querySelector(`select[name="pet${petNumber}_biteHistory"]`);
+            const fields = document.getElementById(`biteDetails${petNumber}`);
+            if (select && fields) {
+                fields.style.display = select.value === 'yes' ? 'block' : 'none';
+            }
+        }
+
+        function toggleAccessCode() {
+            const accessMethod = document.querySelector('input[name="accessMethod"]:checked');
+            const codeGroup = document.getElementById('accessCodeGroup');
+            const detailsGroup = document.getElementById('accessDetailsGroup');
+            const codeLabel = document.getElementById('accessCodeLabel');
+            const detailsLabel = document.getElementById('accessDetailsLabel');
+            
+            if (!accessMethod) {
+                codeGroup.style.display = 'none';
+                detailsGroup.style.display = 'none';
+                return;
+            }
+            
+            const method = accessMethod.value;
+            
+            // Show code input for code-based methods
+            if (['code', 'lockbox'].includes(method)) {
+                codeGroup.style.display = 'block';
+                if (method === 'code') codeLabel.textContent = 'Access Code';
+                else if (method === 'lockbox') codeLabel.textContent = 'Lock Box Code';
+            } else {
+                codeGroup.style.display = 'none';
+            }
+            
+            // Show details for methods that need explanation
+            if (['hidden_key', 'other'].includes(method)) {
+                detailsGroup.style.display = 'block';
+                if (method === 'hidden_key') {
+                    detailsLabel.innerHTML = 'Where is the key hidden?<span class="required">*</span>';
+                    document.getElementById('accessDetails').placeholder = 'Please describe exactly where to find the key (e.g., under the mat, in the fake rock by the porch)';
+                } else {
+                    detailsLabel.innerHTML = 'Please explain access method<span class="required">*</span>';
+                    document.getElementById('accessDetails').placeholder = 'How will we gain entry to your home?';
+                }
+            } else {
+                detailsGroup.style.display = 'none';
+            }
+        }
+
+        function updateProgress() {
+            const progressFill = document.getElementById('progressFill');
+            const percentage = ((currentStep - 1) / (totalSteps - 1)) * 100;
+            progressFill.style.width = percentage + '%';
+            
+            document.querySelectorAll('.step').forEach((step, index) => {
+                step.classList.remove('active', 'completed');
+                if (index + 1 === currentStep) {
+                    step.classList.add('active');
+                } else if (index + 1 < currentStep) {
+                    step.classList.add('completed');
+                }
+            });
+        }
+
+        function validateCurrentStep() {
+            const currentStepEl = document.querySelector(`.form-step[data-step="${currentStep}"]`);
+            const requiredFields = currentStepEl.querySelectorAll('[required]');
+            
+            for (let field of requiredFields) {
+                if (!field.value) {
+                    field.focus();
+                    field.style.borderColor = '#E57373';
+                    setTimeout(() => {
+                        field.style.borderColor = '';
+                    }, 2000);
+                    return false;
+                }
+            }
+            
+            // Step 2: Validate at least one pet exists
+            if (currentStep === 2) {
+                const petCards = document.querySelectorAll('.pet-card');
+                if (petCards.length === 0) {
+                    alert('Please add at least one pet.');
+                    return false;
+                }
+            }
+            
+            return true;
+        }
+
+        function nextStep() {
+            if (!validateCurrentStep()) return;
+            
+            if (currentStep < totalSteps) {
+                document.querySelector(`.form-step[data-step="${currentStep}"]`).classList.remove('active');
+                currentStep++;
+                document.querySelector(`.form-step[data-step="${currentStep}"]`).classList.add('active');
+                updateProgress();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                
+                if (currentStep === totalSteps) {
+                    generateSummary();
+                }
+            }
+        }
+
+        function prevStep() {
+            if (currentStep > 1) {
+                document.querySelector(`.form-step[data-step="${currentStep}"]`).classList.remove('active');
+                currentStep--;
+                document.querySelector(`.form-step[data-step="${currentStep}"]`).classList.add('active');
+                updateProgress();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }
+
+        function generateSummary() {
+            const summary = document.getElementById('reviewSummary');
+            let html = '';
+            
+            // Client Info
+            const fullName = document.getElementById('fullName').value;
+            const phone = document.getElementById('phone').value;
+            const emergencyName = document.getElementById('emergencyName').value;
+            const emergencyPhone = document.getElementById('emergencyPhone').value;
+            
+            html += `<div class="summary-section">`;
+            html += `<h3>Your Information</h3>`;
+            html += `<div class="summary-item"><span class="summary-label">Name:</span> <span class="summary-value">${fullName}</span></div>`;
+            html += `<div class="summary-item"><span class="summary-label">Phone:</span> <span class="summary-value">${phone}</span></div>`;
+            html += `<div class="summary-item"><span class="summary-label">Emergency Contact:</span> <span class="summary-value">${emergencyName} - ${emergencyPhone}</span></div>`;
+            html += `</div>`;
+            
+            // Pets
+            const petCards = document.querySelectorAll('.pet-card');
+            html += `<div class="summary-section">`;
+            html += `<h3>Your Pets (${petCards.length})</h3>`;
+            
+            petCards.forEach((card, index) => {
+                const petNum = index + 1;
+                const name = card.querySelector(`input[name^="pet"][name$="_name"]`).value;
+                const type = card.querySelector(`select[name^="pet"][name$="_type"]`).value;
+                const breed = card.querySelector(`input[name^="pet"][name$="_breed"]`).value;
+                const weight = card.querySelector(`select[name^="pet"][name$="_weight"]`).value;
+                
+                html += `<div class="summary-item">`;
+                html += `<span class="summary-label">${name}</span><br>`;
+                html += `<span class="summary-value">${type === 'dog' ? 'Dog' : 'Cat'} - ${breed}, ${weight} lbs</span>`;
+                html += `</div>`;
+            });
+            html += `</div>`;
+            
+            // Location
+            const address = document.getElementById('serviceAddress').value;
+            const unit = document.getElementById('apartmentUnit').value;
+            
+            html += `<div class="summary-section">`;
+            html += `<h3>Location</h3>`;
+            html += `<div class="summary-item"><span class="summary-label">Address:</span> <span class="summary-value">${address}${unit ? ', ' + unit : ''}</span></div>`;
+            html += `</div>`;
+            
+            // Access
+            const accessMethod = document.querySelector('input[name="accessMethod"]:checked');
+            
+            html += `<div class="summary-section">`;
+            html += `<h3>Home Access</h3>`;
+            if (accessMethod) {
+                const methodLabels = {
+                    'code': 'Code',
+                    'lockbox': 'Lock Box',
+                    'hidden_key': 'Hidden Key',
+                    'knock': 'Knock / Someone Home',
+                    'other': 'Other'
+                };
+                html += `<div class="summary-item"><span class="summary-label">Entry Method:</span> <span class="summary-value">${methodLabels[accessMethod.value]}</span></div>`;
+            }
+            html += `</div>`;
+            
+            summary.innerHTML = html;
+            
+            // Also prepare pet data for hidden field
+            collectPetData();
+        }
+
+        function collectPetData() {
+            const petCards = document.querySelectorAll('.pet-card');
+            const petsArray = [];
+            
+            petCards.forEach((card, index) => {
+                const petData = {};
+                const inputs = card.querySelectorAll('input, select, textarea');
+                inputs.forEach(input => {
+                    if (input.name) {
+                        petData[input.name] = input.value;
+                    }
+                });
+                petsArray.push(petData);
+            });
+            
+            document.getElementById('petDataHidden').value = JSON.stringify(petsArray);
+        }
+
+        document.getElementById('petVisitForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Collect final pet data
+            collectPetData();
+            
+            document.querySelector('.form-content').style.display = 'none';
+            document.querySelector('.progress-container').style.display = 'none';
+            document.getElementById('confirmationSection').classList.add('active');
+            
+            const formData = new FormData(this);
+            fetch(this.action, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'Accept': 'application/json'
+                }
+            }).catch(error => {
+                console.log('Form submitted');
+            });
+        });
+
+        updateProgress();
+    </script>
+</body>
+</html>
