@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MyReliaCare Forms Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant:wght@300;400;500;600&family=Cormorant+Unicase:wght@600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Cormorant', serif;
+            background: #1A1614;
+            color: #F5E8EB;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        /* Login Screen */
+        .login-container {
+            max-width: 400px;
+            width: 100%;
+            background: linear-gradient(135deg, #2A2220 0%, #1F1A18 100%);
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            border: 2px solid rgba(200, 162, 169, 0.2);
+            padding: 40px;
+            text-align: center;
+        }
+
+        .login-container h1 {
+            font-family: 'Cormorant Unicase', serif;
+            color: #C8A2A9;
+            font-size: 1.8em;
+            margin-bottom: 10px;
+        }
+
+        .login-container p {
+            color: #D4C5C9;
+            margin-bottom: 30px;
+            font-size: 1.1em;
+        }
+
+        .login-container input {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid rgba(200, 162, 169, 0.2);
+            border-radius: 8px;
+            font-size: 16px;
+            font-family: 'Cormorant', serif;
+            color: #F5E8EB;
+            background: rgba(42, 34, 32, 0.6);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .login-container input:focus {
+            outline: none;
+            border-color: #C8A2A9;
+            box-shadow: 0 0 0 3px rgba(200, 162, 169, 0.15);
+        }
+
+        .login-container input::placeholder {
+            color: rgba(245, 232, 235, 0.4);
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 14px 24px;
+            background: linear-gradient(135deg, #C8A2A9 0%, #B59197 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            font-family: 'Cormorant Unicase', serif;
+            transition: all 0.3s ease;
+        }
+
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(200, 162, 169, 0.4);
+        }
+
+        .error-msg {
+            color: #E57373;
+            margin-top: 15px;
+            display: none;
+        }
+
+        /* Dashboard */
+        .dashboard-container {
+            display: none;
+            max-width: 800px;
+            width: 100%;
+            background: linear-gradient(135deg, #2A2220 0%, #1F1A18 100%);
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            border: 2px solid rgba(200, 162, 169, 0.2);
+            overflow: hidden;
+        }
+
+        .dashboard-header {
+            background: linear-gradient(135deg, #2F2825 0%, #2A2220 100%);
+            padding: 30px;
+            text-align: center;
+            border-bottom: 1px solid rgba(200, 162, 169, 0.15);
+        }
+
+        .dashboard-header h1 {
+            font-family: 'Cormorant Unicase', serif;
+            color: #C8A2A9;
+            font-size: 2em;
+            margin-bottom: 5px;
+        }
+
+        .dashboard-header p {
+            color: #D4C5C9;
+            font-size: 1.05em;
+        }
+
+        .dashboard-content {
+            padding: 30px;
+        }
+
+        .section {
+            margin-bottom: 35px;
+        }
+
+        .section:last-child {
+            margin-bottom: 0;
+        }
+
+        .section-title {
+            font-family: 'Cormorant Unicase', serif;
+            color: #C8A2A9;
+            font-size: 1.3em;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(200, 162, 169, 0.2);
+        }
+
+        .form-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            background: rgba(200, 162, 169, 0.05);
+            border-radius: 8px;
+            margin-bottom: 10px;
+            border: 1px solid rgba(200, 162, 169, 0.1);
+        }
+
+        .form-row:hover {
+            background: rgba(200, 162, 169, 0.1);
+            border-color: rgba(200, 162, 169, 0.2);
+        }
+
+        .form-name {
+            font-weight: 600;
+            color: #F5E8EB;
+            font-size: 1.1em;
+        }
+
+        .form-description {
+            color: #D4C5C9;
+            font-size: 0.9em;
+            margin-top: 3px;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .copy-btn, .open-btn {
+            padding: 10px 18px;
+            border-radius: 6px;
+            font-size: 0.95em;
+            font-weight: 600;
+            cursor: pointer;
+            font-family: 'Cormorant', serif;
+            transition: all 0.3s ease;
+        }
+
+        .copy-btn {
+            background: linear-gradient(135deg, #C8A2A9 0%, #B59197 100%);
+            color: white;
+            border: none;
+        }
+
+        .copy-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 3px 10px rgba(200, 162, 169, 0.3);
+        }
+
+        .copy-btn.copied {
+            background: #6B8E6B;
+        }
+
+        .open-btn {
+            background: transparent;
+            color: #C8A2A9;
+            border: 2px solid rgba(200, 162, 169, 0.3);
+        }
+
+        .open-btn:hover {
+            border-color: #C8A2A9;
+            background: rgba(200, 162, 169, 0.1);
+        }
+
+        .coming-soon {
+            opacity: 0.5;
+            pointer-events: none;
+        }
+
+        .coming-soon .form-name::after {
+            content: " (Coming Soon)";
+            color: #D4C5C9;
+            font-weight: 400;
+            font-size: 0.85em;
+        }
+
+        .logout-btn {
+            display: block;
+            margin: 30px auto 0;
+            padding: 12px 30px;
+            background: transparent;
+            color: #D4C5C9;
+            border: 1px solid rgba(200, 162, 169, 0.3);
+            border-radius: 6px;
+            font-family: 'Cormorant', serif;
+            font-size: 1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .logout-btn:hover {
+            border-color: #C8A2A9;
+            color: #C8A2A9;
+        }
+
+        /* Toast notification */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: #B59197;
+            color: white;
+            padding: 15px 30px;
+            border-radius: 8px;
+            font-weight: 600;
+            opacity: 0;
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+
+        @media (max-width: 600px) {
+            .form-row {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 12px;
+            }
+
+            .form-actions {
+                width: 100%;
+            }
+
+            .copy-btn, .open-btn {
+                flex: 1;
+                text-align: center;
+            }
+
+            .dashboard-content {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Screen -->
+    <div class="login-container" id="loginContainer">
+        <h1>MyReliaCare</h1>
+        <p>Forms Dashboard</p>
+        <input type="password" id="passwordInput" placeholder="Enter password" onkeypress="if(event.key === 'Enter') checkPassword()">
+        <button class="login-btn" onclick="checkPassword()">Access Dashboard</button>
+        <p class="error-msg" id="errorMsg">Incorrect password. Please try again.</p>
+    </div>
+
+    <!-- Dashboard -->
+    <div class="dashboard-container" id="dashboardContainer">
+        <div class="dashboard-header">
+            <h1>MyReliaCare Forms</h1>
+            <p>Copy links to send to clients via text or email</p>
+        </div>
+
+        <div class="dashboard-content">
+            <div class="section">
+                <h2 class="section-title">In-Home Pet Visits</h2>
+                <div class="form-row">
+                    <div>
+                        <div class="form-name">Pet Visit Info Form</div>
+                        <div class="form-description">Complete intake for in-home pet visit clients</div>
+                    </div>
+                    <div class="form-actions">
+                        <button class="copy-btn" onclick="copyLink('pet-visit')">Copy Link</button>
+                        <button class="open-btn" onclick="openForm('pet-visit')">Preview</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2 class="section-title">Add-Ons (Send with Pet Visit Form)</h2>
+                <div class="form-row coming-soon">
+                    <div>
+                        <div class="form-name">+ Poop Scoop Service</div>
+                        <div class="form-description">Yard info & service preferences</div>
+                    </div>
+                    <div class="form-actions">
+                        <button class="copy-btn" onclick="copyLink('poop-scoop-addon')">Copy Link</button>
+                        <button class="open-btn" onclick="openForm('poop-scoop-addon')">Preview</button>
+                    </div>
+                </div>
+                <div class="form-row coming-soon">
+                    <div>
+                        <div class="form-name">+ Pet Reset Cleaning</div>
+                        <div class="form-description">Home cleaning preferences</div>
+                    </div>
+                    <div class="form-actions">
+                        <button class="copy-btn" onclick="copyLink('pet-reset-addon')">Copy Link</button>
+                        <button class="open-btn" onclick="openForm('pet-reset-addon')">Preview</button>
+                    </div>
+                </div>
+                <div class="form-row coming-soon">
+                    <div>
+                        <div class="form-name">+ Dog Bath</div>
+                        <div class="form-description">Bath & grooming preferences</div>
+                    </div>
+                    <div class="form-actions">
+                        <button class="copy-btn" onclick="copyLink('dog-bath-addon')">Copy Link</button>
+                        <button class="open-btn" onclick="openForm('dog-bath-addon')">Preview</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2 class="section-title">Standalone Forms (No In-Home Visit)</h2>
+                <div class="form-row coming-soon">
+                    <div>
+                        <div class="form-name">Poop Scoop Service</div>
+                        <div class="form-description">Full intake for poop scoop-only clients</div>
+                    </div>
+                    <div class="form-actions">
+                        <button class="copy-btn" onclick="copyLink('poop-scoop')">Copy Link</button>
+                        <button class="open-btn" onclick="openForm('poop-scoop')">Preview</button>
+                    </div>
+                </div>
+                <div class="form-row coming-soon">
+                    <div>
+                        <div class="form-name">Pet Reset Cleaning</div>
+                        <div class="form-description">Full intake for pet reset-only clients</div>
+                    </div>
+                    <div class="form-actions">
+                        <button class="copy-btn" onclick="copyLink('pet-reset')">Copy Link</button>
+                        <button class="open-btn" onclick="openForm('pet-reset')">Preview</button>
+                    </div>
+                </div>
+            </div>
+
+            <button class="logout-btn" onclick="logout()">Log Out</button>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast">Link copied to clipboard!</div>
+
+    <script>
+        // Simple password protection
+        const DASHBOARD_PASSWORD = 'Wizzy03!leighmc$';
+        
+        // Base URL - UPDATE THIS after deploying to GitHub Pages
+        const BASE_URL = 'https://myreliacare.github.io/forms/';
+
+        function checkPassword() {
+            const input = document.getElementById('passwordInput');
+            const error = document.getElementById('errorMsg');
+            
+            if (input.value === DASHBOARD_PASSWORD) {
+                document.getElementById('loginContainer').style.display = 'none';
+                document.getElementById('dashboardContainer').style.display = 'block';
+                sessionStorage.setItem('authenticated', 'true');
+            } else {
+                error.style.display = 'block';
+                input.value = '';
+                input.focus();
+            }
+        }
+
+        function copyLink(formName) {
+            const url = BASE_URL + formName + '.html';
+            navigator.clipboard.writeText(url).then(() => {
+                showToast('Link copied to clipboard!');
+                
+                // Visual feedback on button
+                event.target.textContent = 'Copied!';
+                event.target.classList.add('copied');
+                setTimeout(() => {
+                    event.target.textContent = 'Copy Link';
+                    event.target.classList.remove('copied');
+                }, 2000);
+            });
+        }
+
+        function openForm(formName) {
+            const url = BASE_URL + formName + '.html';
+            window.open(url, '_blank');
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        function logout() {
+            sessionStorage.removeItem('authenticated');
+            document.getElementById('dashboardContainer').style.display = 'none';
+            document.getElementById('loginContainer').style.display = 'flex';
+            document.getElementById('passwordInput').value = '';
+            document.getElementById('errorMsg').style.display = 'none';
+        }
+
+        // Check if already authenticated this session
+        if (sessionStorage.getItem('authenticated') === 'true') {
+            document.getElementById('loginContainer').style.display = 'none';
+            document.getElementById('dashboardContainer').style.display = 'block';
+        }
+    </script>
+</body>
+</html>
