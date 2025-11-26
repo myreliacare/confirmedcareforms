@@ -310,73 +310,72 @@
 
         <div class="dashboard-content">
             <div class="section">
-                <h2 class="section-title">In-Home Pet Visits</h2>
+                <h2 class="section-title">Standalone Services</h2>
                 <div class="form-row">
                     <div>
-                        <div class="form-name">Pet Visit Info Form</div>
-                        <div class="form-description">Complete intake for in-home pet visit clients</div>
+                        <div class="form-name">Pet Visits</div>
                     </div>
                     <div class="form-actions">
                         <button class="copy-btn" onclick="copyLink('pet-info')">Copy Link</button>
                         <button class="open-btn" onclick="openForm('pet-info')">Preview</button>
                     </div>
                 </div>
-            </div>
-
-            <div class="section">
-                <h2 class="section-title">Add-Ons (Send with Pet Visit Form)</h2>
-                <div class="form-row coming-soon">
-                    <div>
-                        <div class="form-name">+ Poop Scoop Service</div>
-                        <div class="form-description">Yard info & service preferences</div>
-                    </div>
-                    <div class="form-actions">
-                        <button class="copy-btn" onclick="copyLink('poop-scoop-addon')">Copy Link</button>
-                        <button class="open-btn" onclick="openForm('poop-scoop-addon')">Preview</button>
-                    </div>
-                </div>
-                <div class="form-row coming-soon">
-                    <div>
-                        <div class="form-name">+ Pet Reset Cleaning</div>
-                        <div class="form-description">Home cleaning preferences</div>
-                    </div>
-                    <div class="form-actions">
-                        <button class="copy-btn" onclick="copyLink('pet-reset-addon')">Copy Link</button>
-                        <button class="open-btn" onclick="openForm('pet-reset-addon')">Preview</button>
-                    </div>
-                </div>
-                <div class="form-row coming-soon">
-                    <div>
-                        <div class="form-name">+ Dog Bath</div>
-                        <div class="form-description">Bath & grooming preferences</div>
-                    </div>
-                    <div class="form-actions">
-                        <button class="copy-btn" onclick="copyLink('dog-bath-addon')">Copy Link</button>
-                        <button class="open-btn" onclick="openForm('dog-bath-addon')">Preview</button>
-                    </div>
-                </div>
-            </div>
-
-            <div class="section">
-                <h2 class="section-title">Standalone Forms (No In-Home Visit)</h2>
-                <div class="form-row coming-soon">
+                <div class="form-row">
                     <div>
                         <div class="form-name">Poop Scoop Service</div>
-                        <div class="form-description">Full intake for poop scoop-only clients</div>
                     </div>
                     <div class="form-actions">
-                        <button class="copy-btn" onclick="copyLink('poop-scoop')">Copy Link</button>
-                        <button class="open-btn" onclick="openForm('poop-scoop')">Preview</button>
+                        <button class="copy-btn" onclick="copyLink('poop-scoop-only')">Copy Link</button>
+                        <button class="open-btn" onclick="openForm('poop-scoop-only')">Preview</button>
                     </div>
                 </div>
-                <div class="form-row coming-soon">
+                <div class="form-row">
                     <div>
                         <div class="form-name">Pet Reset Cleaning</div>
-                        <div class="form-description">Full intake for pet reset-only clients</div>
                     </div>
                     <div class="form-actions">
-                        <button class="copy-btn" onclick="copyLink('pet-reset')">Copy Link</button>
-                        <button class="open-btn" onclick="openForm('pet-reset')">Preview</button>
+                        <button class="copy-btn" onclick="copyLink('pet-reset-only')">Copy Link</button>
+                        <button class="open-btn" onclick="openForm('pet-reset-only')">Preview</button>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div>
+                        <div class="form-name">Weekly Refresh Package</div>
+                    </div>
+                    <div class="form-actions">
+                        <button class="copy-btn" onclick="copyLink('weekly-refresh')">Copy Link</button>
+                        <button class="open-btn" onclick="openForm('weekly-refresh')">Preview</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2 class="section-title">Combined Services</h2>
+                <div class="form-row">
+                    <div>
+                        <div class="form-name">Pet Visits + Poop Scoop</div>
+                    </div>
+                    <div class="form-actions">
+                        <button class="copy-btn" onclick="copyLink('pet-visit-poop-scoop')">Copy Link</button>
+                        <button class="open-btn" onclick="openForm('pet-visit-poop-scoop')">Preview</button>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div>
+                        <div class="form-name">Pet Visits + Reset Cleaning</div>
+                    </div>
+                    <div class="form-actions">
+                        <button class="copy-btn" onclick="copyLink('pet-visit-reset')">Copy Link</button>
+                        <button class="open-btn" onclick="openForm('pet-visit-reset')">Preview</button>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div>
+                        <div class="form-name">Pet Visits + Poop Scoop + Reset Cleaning</div>
+                    </div>
+                    <div class="form-actions">
+                        <button class="copy-btn" onclick="copyLink('pet-visit-full')">Copy Link</button>
+                        <button class="open-btn" onclick="openForm('pet-visit-full')">Preview</button>
                     </div>
                 </div>
             </div>
@@ -393,7 +392,7 @@
         const DASHBOARD_PASSWORD = 'Wizzy03!leighmc$';
         
         // Base URL for GitHub Pages
-        const BASE_URL = 'https://myreliacare.github.io/confirmedcareforms/';
+        const BASE_URL = 'https://myreliacare.github.io/forms/';
 
         function checkPassword() {
             const input = document.getElementById('passwordInput');
